@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>  
+    <title>GBT Test Browser</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: 0.5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+	 
+    </style>
+  </head>
+  <body>
+  
+    <ul id="messages"></ul>
+    <form action="">
+	 
+	 
+
+     // <input id="m" autocomplete="off" /><button>Click Here To Send Randomized Data To Webserver</button>
+    </form>
+	
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+var longitude = -107.6504, longitude2;
+var UUID = 5555, UUID2;
+var latitude = 34.0844, latitude2;
+var body_temp = 94.6, body_temp2;
+var heartrate = 65, SPO2 = 98, ambient = 72, Tamb = 73;
+var phone_type = 111, phone_OSversion = 222, qTerm_app_version = 333, deviceFW_version = 444 ;
+
+   		
+			
+
+var $messages = document.getElementById('messages');
+var newItem = (content) => {
+		var item = document.createElement('li');
+		item.innerText = content;
+		  return item;
+		};
+		
+		
+  $(function () {
+  
+ 
+		var socket2 = io({
+        'reconnection': true,
+        'reconnectionDelay': 1000,
+        'reconnectionDelayMax' : 5000,
+        'reconnectionAttempts': 5
+			});
+			
+	
+	
+    $('form').submit(function(e){
+      e.preventDefault(); 
+      
+		UUID2= UUID + Math.floor(Math.random() * 100) + 1;
+		longitude2= longitude +  (Math.floor(Math.random() * 1000) + 1)/100;
+		latitude2= latitude + (Math.floor(Math.random() * 1000) + 1)/100;
+			
+		body_temp2 = (10*body_temp) + (Math.floor(Math.random() * 100) + 1);	
+				
+		UUID2 = Number( UUID2.toFixed(4) );
+		longitude2 = Number( longitude2.toFixed(4) );
+		latitude2 = Number( latitude2.toFixed(4) );
+		body_temp2 = Number( body_temp2.toFixed(1) );
+		
+		socket2.emit('chat message', "TESTBROWSER      ", 
+									longitude2 , 
+									latitude2 ,
+									body_temp2,
+									heartrate,
+									SPO2,
+									ambient,
+									Tamb, phone_type, phone_OSversion, qTerm_app_version, deviceFW_version
+									);   
+									
+	$messages.prepend(newItem(`UUID:${UUID2},longitude:${longitude2},latitude:${latitude2},bodytemp:${body_temp2},heartrate:${heartrate},SPO2:${SPO2},ambient:${ambient},Tamb:${Tamb}`));   
+ 
+ 								
+									
+      $('#m').val('');
+      return false;
+    });
+     
+  });
+</script>
+
+  </body>
+</html>

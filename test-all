@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Copyright (c) 2016 Rafał Pocztarski
+# Released under MIT License (Expat) - see:
+# https://github.com/rsp/node-static-http-servers/blob/master/LICENSE.md
+
+fail () {
+  echo TESTING FAILED
+  exit 1
+}
+
+for i in estatic.js express.js connect.js http.js net.js; do
+    ./test-server $i || fail
+done
+echo TESTS PASSED

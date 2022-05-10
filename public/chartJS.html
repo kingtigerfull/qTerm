@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GBT DataChart</title>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		
+    </head>
+    <body>
+	 <script src="/socket.io/socket.io.js"></script> 
+	 
+	  <audio id="audio" src="http://www.chiptape.com/chiptape/sounds/medium/Taito_Carousel.wav" autoplay="false" ></audio>
+    <a onclick="playSound();"> Play</a>
+	
+	<audio id="play" src="http://www.chiptape.com/chiptape/sounds/medium/Taito_Carousel.wav"></audio>
+<button onclick="playSound()">Play</button>
+	
+	
+	<p>This is chartJS graphing of bodyTempF (y-axis) vs ambientTempF (x-axis)</p>
+		<p>Click on the colored squares to turn on/off viewable data (per device)</p>
+		<p id="demo"></p>
+		<p id="demo2"></p>
+		
+		<button id="toggle">show/hide all</button>
+	<canvas id="myChart" width="800" height="800"></canvas>   
+	
+	 <script>   
+ 
+const datax = {x:69,y:102};
+console.log('datax.x =',datax.x); 
+
+const data2x = [{x:69,y:102},{x:70,y:103}];
+console.log('data2x.x =',data2x[1].x); 
+
+
+
+
+
+var dataTest1 = [{}];
+var dataTest2= [{}];
+var dataTest3 = [{}];
+var dataTest4= [{}];
+var dataTest5 = [{}];
+var dataTest6 = [{}];
+var dataTest7 = [{}];
+var dataTest8 = [{}];
+var dataTest9 = [{}];
+var dataTest10 = [{}];
+var dataTest11 = [{}];
+var dataTest12 = [{}];
+var dataTest13 = [{}];
+var dataTest14 = [{}];
+var dataTest15 = [{}];
+var dataTest16 = [{}];
+var dataTest17 = [{}];
+var dataTest18 = [{}];
+var dataTest19 = [{}];
+var dataTest20 = [{}];
+var dataTest21 = [{}];
+var dataTest22 = [{}];
+var dataTest23 = [{}];
+var dataTest24 = [{}];
+var dataTest25 = [{}];
+var dataTest26 = [{}];
+var dataTest27 = [{}];
+
+
+
+console.log('dataTest1 = ',dataTest1);
+ 
+ 
+ 
+ 
+ var jsonStrGBT = '{"gbtDeviceData":[{"x":"69","y":"102"},{"x":"72","y":"102"},{"x":"73","y":"104"}]}';
+ var jsonStrGBT2 = '{"gbtDeviceData":[{"ambientF":"69","bodyF":"102"},{"ambientF":"72","bodyF":"103"},{"ambientF":"73","bodyF":"104"}]}';
+
+ 
+var obj = JSON.parse(jsonStrGBT);
+console.log('gbtDeviceData_prePUSH =',obj.gbtDeviceData); 
+
+var obj2 = JSON.parse(jsonStrGBT2);
+console.log('obj element =',obj.gbtDeviceData[1].x); 
+console.log('obj2 ambientF element =',obj2.gbtDeviceData[2].ambientF); 
+
+console.log('obj1 =',datax.x);
+
+ 
+
+
+var x_data = 75;
+var y_data = 100;
+
+console.log('obj.gbtDeviceData_prePUSH =',obj.gbtDeviceData); 
+
+
+obj['gbtDeviceData'].push({"x":"66","y":"106"}); //this works!
+
+ 
+
+
+
+
+   
+ 
+ 
+
+console.log('obj.gbtDeviceData_postPUSH =',obj.gbtDeviceData); 
+
+
+console.log('obj2 =',obj.gbtDeviceData[1].x); 
+
+
+
+ 
+
+var names = obj.gbtDeviceData.map(function(item) {
+  return item['x'];
+});
+console.log('obj.gbtDeviceData.map  =',names);
+
+
+
+
+jsonStr = JSON.stringify(obj); 
+console.log('jsonStr =',jsonStr);
+
+const stringLength = jsonStr.length;
+var jsonStr_minus_end = jsonStr.substr(0, stringLength-2);
+console.log('jsonStr_minus_end = ',jsonStr_minus_end)
+var jsonStr_done = jsonStr_minus_end.substr(18);
+var jsonStr_done2 = '[' + jsonStr_done + ']';
+
+console.log('jsonStr_done2 = ', jsonStr_done2);
+
+var jsonStr_truncated = jsonStr.substr(18);
+console.log('jsonStr_truncated = ',jsonStr_truncated);
+
+ 
+ 
+ 
+ 			
+				
+var ctx = document.getElementById('myChart').getContext('2d'); 
+
+var GBTdata = {
+					  datasets: [
+					  {
+						label: 'TESTBROWSER',
+						 data: dataTest2, 
+						backgroundColor: 'rgb(0,255,0)'
+					  },
+					  {
+						label: '00:81:F9:FD:B9:BB',
+						data: dataTest1, 
+						backgroundColor: 'rgb(0,0,255)' //this is actually the color of the scatter plot DOTS!
+					  },
+					  
+					  {
+						label: '00:81:F9:FD:AB:24',
+						data: dataTest3, 
+						backgroundColor: 'rgb(0,255,255)' //this is actually the color of the scatter plot DOTS!
+					  },
+					  {
+						label: '00:81:F9:FD:C7:5D',
+						data: dataTest4, 
+						backgroundColor: 'rgb(255, 0, 0)' //this is actually the color of the scatter plot DOTS!
+					  },
+					  {
+						label: '00:81:F9:FD:A8:DD',
+						data: dataTest5, 
+						backgroundColor: 'rgb(255, 0, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:AE:92',
+						data: dataTest6, 
+						backgroundColor: 'rgb( 255,255,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: 'XX:XX:XX:XX:B0:27',
+						data: dataTest7, 
+						backgroundColor: 'rgb(255,255 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:B1:B8',
+						data: dataTest8, 
+						backgroundColor: 'rgb(0, 0, 127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:C4:3C',
+						data: dataTest9, 
+						backgroundColor: 'rgb(0, 127,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:CA:9E',
+						data: dataTest10, 
+						backgroundColor: 'rgb(0, 127,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:B9:B2',
+						data: dataTest11, 
+						backgroundColor: 'rgb(127,0,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:D4:77',
+						data: dataTest12, 
+						backgroundColor: 'rgb(127,0,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '58:93:D8:3F:59:7D',
+						data: dataTest13, 
+						backgroundColor: 'rgb(127,127,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:C4:64',
+						data: dataTest14, 
+						backgroundColor: 'rgb(127,127,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: 'XX:XX:XX:XX:C9:44',
+						data: dataTest15, 
+						backgroundColor: 'rgb(127, 0, 255)' //this is actually the color of the scatter plot DOTS!
+					  }  
+					  ,
+					  {
+						label: 'XX:XX:XX:XX:5A:19',
+						data: dataTest16, 
+						backgroundColor: 'rgb(0,127, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: 'XX:XX:XX:XX:15:C6',
+						data: dataTest17, 
+						backgroundColor: 'rgb(255, 0, 127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:DA:49',
+						data: dataTest18, 
+						backgroundColor: 'rgb(255, 127, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '19',
+						data: dataTest19, 
+						backgroundColor: 'rgb(78, 140, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '20',
+						data: dataTest20, 
+						backgroundColor: 'rgb(140, 0, 78)' //this is actually the color of the scatter plot DOTS!
+					  }  
+					   
+					  
+					   ,
+					  {
+						label: '60:98:66:55:5E:5C',
+						data: dataTest21, 
+						backgroundColor: 'rgb(127,0,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '60:98:66:55:5F:5D',
+						data: dataTest22, 
+						backgroundColor: 'rgb(127,0,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:D6:FE',
+						data: dataTest23, 
+						backgroundColor: 'rgb(127,127,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '60:98:66:55:5E:63',
+						data: dataTest24, 
+						backgroundColor: 'rgb(127,127,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '60:98:66:4B:2C:5E',
+						data: dataTest25, 
+						backgroundColor: 'rgb(127, 0, 255)' //this is actually the color of the scatter plot DOTS!
+					  }   
+					  ,
+					  {
+						label: '00:81:F9:FD:DC:C9',
+						data: dataTest26, 
+						backgroundColor: 'rgb(0,127, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '60:98:66:55:5F:35',
+						data: dataTest27, 
+						backgroundColor: 'rgb(255, 0, 127)' //this is actually the color of the scatter plot DOTS!
+					  }  
+					  
+					  
+					  ],
+					}; 
+					
+			 
+				
+				myChart = new Chart(ctx, {
+						 type: 'scatter',
+						  data: GBTdata,
+						  options: {
+						  responsive: false 
+				
+						  }
+						  })
+						
+
+function playSound2 () {
+    document.getElementById('play').play();
+}
+  
+ 
+    function playSound() {
+          var sound = document.getElementById("audio");
+          sound.play();
+      }
+ 
+
+	
+					
+						
+						
+https://stackoverflow.com/questions/49249902/select-all-and-unselect-option-for-chart-js/49252102#49252102						
+$("#toggle").click(function() {
+	 myChart.data.datasets.forEach(function(ds) {
+    ds.hidden = !ds.hidden;
+  });
+  myChart.update();
+});						
+						
+						
+						
+						
+						
+						
+				 
+console.log('bamm!',dataTest1, dataTest2,dataTest3, dataTest4,dataTest5,dataTest6,dataTest7,dataTest8,dataTest9,dataTest10,dataTest11,dataTest12,dataTest13,dataTest14,dataTest15,dataTest16,dataTest17,dataTest18,dataTest19,dataTest20); 
+
+
+var socket6 = io({
+        'reconnection': true,
+        'reconnectionDelay': 1000,
+        'reconnectionDelayMax' : 5000,
+        'reconnectionAttempts': 5
+			});  
+	 
+socket6.on('ChartJS data', (dataTest1, dataTest2,dataTest3, dataTest4,dataTest5,dataTest6,dataTest7,dataTest8,dataTest9,dataTest10,dataTest11,dataTest12,dataTest13,dataTest14,dataTest15,dataTest16,dataTest17,dataTest18,dataTest19,dataTest20,dataTest21,dataTest22,dataTest23,dataTest24,dataTest25,dataTest26,dataTest27  )  => { 
+
+				 
+				playSound();
+				playSound2(); 
+				
+				console.log('bamm!',dataTest1, dataTest2,dataTest3, dataTest4,dataTest5,dataTest6,dataTest7,dataTest8,dataTest9,dataTest10,dataTest11,dataTest12,dataTest13,dataTest14,dataTest15,dataTest16,dataTest17,dataTest18,dataTest19,dataTest20,dataTest21,dataTest22,dataTest23,dataTest24,dataTest25,dataTest26,dataTest27 ); 
+				
+				GBTdata = {
+					  datasets: [
+					  {
+						label: 'TESTBROWSER',
+						 data: dataTest2, 
+						backgroundColor: 'rgb(0,255,0)'
+					  },
+					  {
+						label: '00:81:F9:FD:B9:BB',
+						data: dataTest1, 
+						backgroundColor: 'rgb(0,0,255)' //this is actually the color of the scatter plot DOTS!
+					  },
+					  
+					  {
+						label: '00:81:F9:FD:AB:24',
+						data: dataTest3, 
+						backgroundColor: 'rgb(0,255,255)' //this is actually the color of the scatter plot DOTS!
+					  },
+					  {
+						label: '00:81:F9:FD:C7:5D',
+						data: dataTest4, 
+						backgroundColor: 'rgb(255, 0, 0)' //this is actually the color of the scatter plot DOTS!
+					  },
+					  {
+						label: '00:81:F9:FD:A8:DD',
+						data: dataTest5, 
+						backgroundColor: 'rgb(255, 0, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:AE:92',
+						data: dataTest6, 
+						backgroundColor: 'rgb( 255,255,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:B0:27',
+						data: dataTest7, 
+						backgroundColor: 'rgb(255,255 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:B1:B8',
+						data: dataTest8, 
+						backgroundColor: 'rgb(0, 0, 127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:C4:3C',
+						data: dataTest9, 
+						backgroundColor: 'rgb(0, 127,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:CA:9E',
+						data: dataTest10, 
+						backgroundColor: 'rgb(0, 127,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:B9:B2',
+						data: dataTest11, 
+						backgroundColor: 'rgb(127,0,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:D4:77',
+						data: dataTest12, 
+						backgroundColor: 'rgb(127,0,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '58:93:D8:3F:59:7D',
+						data: dataTest13, 
+						backgroundColor: 'rgb(127,127,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:C4:64',
+						data: dataTest14, 
+						backgroundColor: 'rgb(127,127,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:C9:44',
+						data: dataTest15, 
+						backgroundColor: 'rgb(127, 0, 255)' //this is actually the color of the scatter plot DOTS!
+					  }  
+					  ,
+					  {
+						label: '58:93:D8:3F:5A:19',
+						data: dataTest16, 
+						backgroundColor: 'rgb(0,127, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FE:15:C6',
+						data: dataTest17, 
+						backgroundColor: 'rgb(255, 0, 127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:DA:49',
+						data: dataTest18, 
+						backgroundColor: 'rgb(255, 127, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '19',
+						data: dataTest19, 
+						backgroundColor: 'rgb(78, 140, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '20',
+						data: dataTest20, 
+						backgroundColor: 'rgb(140, 0, 78)' //this is actually the color of the scatter plot DOTS!
+					  }  
+					  
+					  
+					  
+					  
+					  ,
+					  {
+						label: '60:98:66:55:5E:5C',
+						data: dataTest21, 
+						backgroundColor: 'rgb(127,0,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '60:98:66:55:5F:5D',
+						data: dataTest22, 
+						backgroundColor: 'rgb(127,0,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '60:98:66:55:5F:35',
+						data: dataTest23, 
+						backgroundColor: 'rgb(127,127,0)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '60:98:66:55:5E:63',
+						data: dataTest24, 
+						backgroundColor: 'rgb(127,127,127)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '00:81:F9:FD:DC:C9',
+						data: dataTest25, 
+						backgroundColor: 'rgb(127, 0, 255)' //this is actually the color of the scatter plot DOTS!
+					  }  
+					  ,
+					  {
+						label: '00:81:F9:FD:D6:FE',
+						data: dataTest26, 
+						backgroundColor: 'rgb(0,127, 255)' //this is actually the color of the scatter plot DOTS!
+					  } 
+					  ,
+					  {
+						label: '60:98:66:4B:2C:5E',
+						data: dataTest27, 
+						backgroundColor: 'rgb(255, 0, 127)' //this is actually the color of the scatter plot DOTS!
+					  }  
+					  
+					  
+					  
+					  
+					  
+					  ],
+					}; 
+					
+				myChart.destroy();	
+					
+			myChart = new Chart(ctx, {
+						 type: 'scatter',
+						  data: GBTdata,
+						  options: {
+						  responsive: false 
+						
+						  }
+						});			
+						
+			
+			myChart.update();			
+				
+		  
+			}); 
+
+ 
+
+</script>
+		
+		 
+		
+    </body>
+</html>

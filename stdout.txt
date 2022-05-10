@@ -1,0 +1,4 @@
+CHAT BROWSERS are listening on *:8000
+GBT  BROWSERS are listening on *:3000
+connected to a GBT browser
+Socket Connected: NhKjhx5B_FIyblE0AAAA

@@ -1,0 +1,7 @@
+(scroll down to see entire message if necessary)
+- press RETURN TO SCAN button when done viewing map
+- map location initializes at most current data point
+- all markers for new data since 4MAR2022 are displayed
+- on cell phone apps, use your fingers to pan or zoom on map 
+- touch (or click) individual markers to see body temperatures
+- touch your cell phone display at any location to kill this message

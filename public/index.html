@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>qTerm Customer Site</title>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" /> 
+	
+	 <link rel="stylesheet" href="style.css">  
+</head>
+
+<body> 
+
+  
+  
+    <script src="/socket.io/socket.io.js"></script> 
+
+	<style> 
+      #map {
+        height: 400px;  
+        width: 100%;   
+       }
+    </style>
+	
+	 <div id="map"></div> 
+	 
+	  <ul id="events"></ul>   
+	  
+	   
+	 
+	 
+ 
+	  
+	  
+  <form id="myForm">
+    <input type="file" id="csvFile" accept=".csv" />
+    <br />
+    <input type="submit" value="Submit" />
+  </form>  
+  
+
+	 
+	  <script>
+	  
+ 
+ 
+
+   
+    
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ const googleMapZoomSetting = 25;
+ 
+
+const myForm = document.getElementById("myForm");
+    const csvFile = document.getElementById("csvFile");
+	
+var markerArray = [];	 
+	
+var last_long = -106.6504, last_lat = 35.0844; //center of ABQ
+  
+	  const KEY = "AIzaSyB4uM-Ph2vQj2bFiQBrjo9XW0mO-4aGq80";
+	           
+    var GEO;  
+	 var tempF;
+		 
+	 LAT = 50.1;
+     LNG = -97.3; 
+	  
+	  var body_temp = 96.6, space = "     ";
+	  
+	   var $events = document.getElementById('events');
+
+        var newItem = (content) => {
+          var item = document.createElement('li');
+          item.innerText = content;
+          return item;
+        };
+
+		
+      
+		var socket = io({
+        'reconnection': true,
+        'reconnectionDelay': 1000,
+        'reconnectionDelayMax' : 5000,
+        'reconnectionAttempts': 5
+			});
+	  
+	  
+	  
+    function initMap(){
+      // Map options
+	 
+
+      var options = {
+        zoom:googleMapZoomSetting,
+	 
+		 center:{lat:last_lat,lng:last_long},  //opens map at location of last data sent
+		gestureHandling: 'greedy'
+      }
+
+  
+      var map = new google.maps.Map(document.getElementById('map'), options);
+	  
+	   
+	  
+			socket.on('connect', () => {
+			  $events.prepend(newItem('connected to server'));
+				}); 
+				
+			socket.on('myCustomEvent', (data) => {   
+			$events.prepend(newItem(data));    
+				})	
+				
+				
+			socket.on('reconnecting', (data) => {
+			 console.log(data);
+			$events.prepend(newItem(data));   
+				})	
+		
+		
+			
+		 
+			socket.on('data', (UUID,  longitude_float, latitude_float, body_temp, heartrate, SPO2, ambient, localTempF,  timeSecs, utcDateAsString, GEO )  => { 
+				 
+							body_temp = Number( body_temp.toFixed(1) );
+				 					 
+			 last_long = longitude_float, last_lat = latitude_float; //this so that each user's map opens at location of last data received								
+										 
+				//original:
+				$events.prepend(newItem(`UUID:${UUID},   longitude:${longitude_float},   latitude:${latitude_float},   bodytempF:${body_temp}, heartrateBPM:${heartrate},   oxygen%:${SPO2},   geoLocation:${GEO}, geoTempF:${localTempF} `), utcDateAsString);  
+				 					
+											 
+									if (body_temp != 0)   
+									{		
+											
+											 if (body_temp < 99.6) {
+											  var markers3 = [       
+													{
+													  
+													 
+													  coords:{lat:latitude_float,lng:longitude_float},
+													  iconImage:'http://maps.google.com/mapfiles/ms/icons/green.png', 
+													  content: String(body_temp)  
+													   
+													}
+													];
+											} else if (body_temp < 100.6) {
+											   var markers3 = [       
+													{ 
+													 
+													  coords:{lat:latitude_float,lng:longitude_float},
+													  iconImage:'http://maps.google.com/mapfiles/ms/icons/yellow.png', 
+													  
+													  content: String(body_temp) 
+													}
+													];
+											} else {
+											   var markers3 = [       
+													{ 
+													  
+													  coords:{lat:latitude_float,lng:longitude_float},
+													  iconImage:'http://maps.google.com/mapfiles/ms/icons/red.png',
+													 
+													 content: String(body_temp) 				  
+													}
+													];
+											} 	
+												
+											 
+										  
+										 
+											   for(var i = 0;i < markers3.length;i++){
+											 
+												addMarker(markers3[i]);
+											  } 
+											  
+											  	  map.setZoom(googleMapZoomSetting);
+												var latLng = new google.maps.LatLng(last_lat, last_long); //Makes a latlng
+												map.panTo(latLng); //Make map global
+	  
+	  
+											 
+												
+									}//end of if (body_temp != 0).........		   
+			  
+				}); //end of socket.on('data', .....
+		
+		 
+		 
+
+    
+	
+ 
+function addCsvArrayDataToMarker3Array(csvArray){
+	  
+ 
+	  
+	  var markers4, markers3, newArray;
+											   for(var i = 0;i < csvArray.length;i++){
+										 
+												latitude_float = parseFloat(csvArray[i].lat);
+												longitude_float = parseFloat(csvArray[i].lng);
+												body_temp = parseFloat(csvArray[i].bodytemp);
+												 
+												 
+												 
+												   markers3 = [       
+														{ 														  
+														  coords:{lat:latitude_float,lng:longitude_float},
+														  iconImage:'http://maps.google.com/mapfiles/ms/icons/red.png',
+														 content: String(body_temp) 				  
+														}
+															];
+													
+													
+											 
+													
+													markerArray = markerArray.concat(markers3); 
+															
+												}	 
+return markerArray;												
+	 
+
+      }
+	  
+
+    function csvToArray(str, delimiter = ",") {
+
+ 
+      const headers = str.slice(0, str.indexOf("\n")).split(delimiter);
+
+   
+      const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+
+     
+      const arr = rows.map(function (row) {
+        const values = row.split(delimiter);
+        const el = headers.reduce(function (object, header, index) {
+          object[header] = values[index];
+          return object;
+        }, {});
+        return el;
+      });
+
+     
+      return arr;
+    }
+	
+	
+	 
+      function addMarker(props){
+        var marker = new google.maps.Marker({
+          position:props.coords,
+          map:map,
+  
+        });
+
+        
+        if(props.iconImage){
+          
+          marker.setIcon(props.iconImage);
+        }
+
+        // Check content
+        if(props.content){
+          var infoWindow = new google.maps.InfoWindow({
+            content:props.content
+          });
+
+          marker.addListener('click', function(){
+            infoWindow.open(map, marker);
+          });
+        }
+      }
+	  
+ 
+      function addMarkerWithTempDisplayed(props){
+	  
+       var marker = new google.maps.Marker({
+          position:props.coords,
+          map:map,
+       
+        });
+
+     
+        if(props.iconImage){
+          
+          marker.setIcon(props.iconImage);
+        }
+
+         
+        if(props.content){
+          var infoWindow = new google.maps.InfoWindow({
+            content:props.content
+          });
+
+          marker.addListener('click', function(){
+            infoWindow.open(map, marker);
+          });
+        }
+		
+		google.maps.event.trigger(marker, 'click'); 
+		
+      }
+	  
+	 
+
+
+    myForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var input = csvFile.files[0];
+ 
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const text = e.target.result;
+		 console.log(e.target.result); 
+        var data = csvToArray(text);
+ 
+		var markers3 = addCsvArrayDataToMarker3Array(data);
+		
+		 
+		for(var i = 0;i < markers3.length;i++){
+		
+		
+											if ( markers3[i].content < 99.6) {											
+												markers3[i].iconImage = "http://maps.google.com/mapfiles/ms/icons/green.png"; 
+											 } else if ( parseFloat(markers3[i].content) < 100.6) {
+												markers3[i].iconImage = "http://maps.google.com/mapfiles/ms/icons/yellow.png"; 
+											} else {
+												markers3[i].iconImage = "http://maps.google.com/mapfiles/ms/icons/red.png"; 
+											} 	
+				
+				addMarker(markers3[i]);
+				}
+console.log(text);
+document.write(JSON.stringify(text));  								
+ 
+  
+  
+  map.setZoom(googleMapZoomSetting);	
+			 
+		var latLng = new google.maps.LatLng(data[data.length-1].lat, data[data.length-1].lng); //Makes a latlng for LAST entry in array (last device location)
+	 
+	
+	map.panTo(latLng); 
+	
+	
+      };
+	  
+	    
+		
+      
+      reader.readAsText(input);
+	  
+
+
+    });
+
+	  
+	  
+
+
+
+
+
+ 
+function getAddress(){
+	  let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${LAT},${LNG}&key=${KEY}`;
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+         
+			 
+		    GEO= data.results[1].formatted_address;  // example:  Yoder, CO 80864, USA"
+          
+        })
+        .catch(err => console.warn(err.message));
+	}
+
+	  
+	
+ 
+
+ 
+
+async function fetchAndDisplayAlertMessage() {
+  let myAlertPromise = new Promise(function(resolve) {
+    let req = new XMLHttpRequest();
+    req.open('GET', "alert_message.txt");
+    req.onload = function() {
+      if (req.status == 200) {
+        resolve(req.response);
+      } else {
+        resolve("File not Found");
+      }
+    };
+    req.send();
+  });
+  
+ alert(await myAlertPromise); 
+   
+}
+
+fetchAndDisplayAlertMessage();
+
+ 
+   
+  
+ 
+async function fetchPeristentData2() {
+  let myPromise = new Promise(function(resolve) {
+    let req = new XMLHttpRequest();
+    req.open('GET', "GBT_google_map_info2.csv");
+    req.onload = function() {
+      if (req.status == 200) {
+        resolve(req.response);
+      } else {
+        resolve("File not Found");
+      }
+    };
+    req.send();
+  });
+  
+   
+
+   var data = csvToArray(await myPromise); 
+	
+ 
+		var markers3 = addCsvArrayDataToMarker3Array(data);
+		
+	 
+		for(var i = 0;i < markers3.length - 1;i++){
+		
+		
+											if ( markers3[i].content < 99.6) {											
+												markers3[i].iconImage = "http://maps.google.com/mapfiles/ms/icons/green.png"; 
+											 } else if ( parseFloat(markers3[i].content) < 100.6) {
+												markers3[i].iconImage = "http://maps.google.com/mapfiles/ms/icons/yellow.png"; 
+											} else {
+												markers3[i].iconImage = "http://maps.google.com/mapfiles/ms/icons/red.png"; 
+											} 	
+				
+				addMarker(markers3[i]);
+				}
+				
+			 
+				if ( markers3[markers3.length - 1].content < 99.6) {											
+												markers3[markers3.length - 1].iconImage = "http://maps.google.com/mapfiles/ms/icons/green.png"; 
+											 } else if ( parseFloat(markers3[i].content) < 100.6) {
+												markers3[markers3.length - 1].iconImage = "http://maps.google.com/mapfiles/ms/icons/yellow.png"; 
+											} else {
+												markers3[markers3.length - 1].iconImage = "http://maps.google.com/mapfiles/ms/icons/red.png"; 
+											} 	
+			 	 addMarkerWithTempDisplayed(markers3[markers3.length - 1]);
+				
+				
+											
+ 
+  
+  
+  map.setZoom(googleMapZoomSetting);	
+ 
+		var latLng = new google.maps.LatLng(data[data.length-1].lat, data[data.length-1].lng); //Makes a latlng for LAST entry in array (last device location)
+		 
+	
+	map.panTo(latLng); //Make map global
+
+ 
+}
+
+ 
+fetchPeristentData2();
+  
+   
+	  
+	  
+    }
+  </script>
+	
+ 
+      <script defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4uM-Ph2vQj2bFiQBrjo9XW0mO-4aGq80&callback=initMap">
+    </script> 
+	
+	
+</body>
+
+ <script src="fetch.js"></script>
+  <script src="ui.js"></script>
+  <script src="app.js"></script>
+
+</html>
